@@ -45,8 +45,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing required fields: amount, currency, or receipt' });
   }
 
-  const key_id = process.env.RAZORPAY_KEY_ID! || 'rzp_live_ntMssPF5wTWOLf';
-  const key_secret = process.env.RAZORPAY_KEY_SECRET! || 'UtwizdujRAJYcOnFgBKMM';
+  const key_id = 'rzp_live_ntMssPF5wTWOLf';
+  const key_secret = 'UtwizdujRAJYcOnFgBKMM';
 
   const auth = Buffer.from(`${key_id}:${key_secret}`).toString('base64');
 
