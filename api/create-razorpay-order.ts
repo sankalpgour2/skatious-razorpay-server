@@ -47,8 +47,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY_ID ?? '',
-    key_secret: process.env.RAZORPAY_KEY_SECRET ?? '',
+    key_id: 'rzp_live_ntMssPF5wTWOLf',
+    key_secret: 'UtwizdujRAJYcOnFgBKMM',
   });
 
   try {
