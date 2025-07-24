@@ -45,8 +45,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing required fields: amount, currency, or receipt' });
   }
 
-  const key_id = 'rzp_live_ntMssPF5wTWOLf';
-  const key_secret = 'UtwizdujRAJYcOnFgBKMM';
+  const key_id = 'rzp_live_okTAPcTHi0rRN2';
+  const key_secret = 'LO9rLlHcI13UKisWZudWUVvl';
 
   const auth = Buffer.from(`${key_id}:${key_secret}`).toString('base64');
 
