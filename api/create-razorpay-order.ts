@@ -1,5 +1,4 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import Razorpay from 'razorpay';
 
 interface CreateOrderRequest {
   amount: number;
@@ -46,22 +45,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(400).json({ error: 'Missing required fields: amount, currency, or receipt' });
   }
 
-  const razorpay = new Razorpay({
-    key_id: 'rzp_live_ntMssPF5wTWOLf',
-    key_secret: 'UtwizdujRAJYcOnFgBKMM',
-  });
+  const key_id = process.env.RAZORPAY_KEY_ID! || 'rzp_live_ntMssPF5wTWOLf';
+  const key_secret = process.env.RAZORPAY_KEY_SECRET! || 'UtwizdujRAJYcOnFgBKMM';
+
+  const auth = Buffer.from(`${key_id}:${key_secret}`).toString('base64');
 
   try {
-    const order = await razorpay.orders.create({
-      amount,
-      currency,
-      receipt,
-      payment_capture: true,
+    const razorpayRes = await fetch('https://api.razorpay.com/v1/orders', {
+      method: 'POST',
+      headers: {
+        Authorization: `Basic ${auth}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        amount,
+        currency,
+        receipt,
+        payment_capture: 1,
+      }),
     });
 
-    return res.status(200).json(order);
+    const responseData = await razorpayRes.json();
+
+    if (!razorpayRes.ok) {
+      console.error('Razorpay Error Response:', responseData);
+      return res.status(razorpayRes.status).json({ error: responseData?.error?.description || 'Failed to create order' });
+    }
+
+    return res.status(200).json(responseData);
   } catch (err: any) {
-    console.error('Razorpay Error:', err);
-    return res.status(500).json({ error: err.message });
+    console.error('Network or Razorpay Error:', err);
+    return res.status(500).json({ error: err.message || 'Internal Server Error' });
   }
 }
