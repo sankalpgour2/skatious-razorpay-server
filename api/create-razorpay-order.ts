@@ -7,7 +7,22 @@ interface CreateOrderRequest {
   receipt: string;
 }
 
+const allowedOrigins = ['http://localhost:5173', 'https://skatious.com'];
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  const origin = req.headers.origin || '';
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+  }
+
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+  // 🛑 CORS preflight
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   console.log('--- Incoming request to create-razorpay-order ---');
   console.log('Method:', req.method);
   console.log('Body:', req.body);
