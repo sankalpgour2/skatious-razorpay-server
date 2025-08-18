@@ -6,7 +6,8 @@ interface CreateOrderRequest {
   receipt: string;
 }
 
-const allowedOrigins = ['http://localhost:5173', 'https://skatious.com', 'https://www.skatious.com', 'www.skatious.com'];
+// const allowedOrigins = ['http://localhost:5173', 'https://skatious.com', 'https://www.skatious.com', 'www.skatious.com'];
+const allowedOrigins = ['http://localhost:5173'];
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const origin = req.headers.origin || '';
